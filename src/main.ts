@@ -5,12 +5,12 @@ const YES = (children?: any) =>
 const NO = () => h("div.col-span-1");
 
 const twoDoors = (name: string) =>
-  h("div.flex.flex-row.w-fit.border.border-black", [
+  h("div.flex.flex-row.w-fit.h-full.border.border-black", [
     h(
-      "div.col-span-1.h-32.w-20.flex.justify-center.items-center",
+      "div.col-span-1.h-full.w-20.flex.justify-center.items-center",
       h("span.inline-block", name)
     ),
-    h("div.col-span-1.h-32.w-4.grid.grid-rows-5.grid-cols-1", [
+    h("div.col-span-1.h-full.w-4.grid.grid-rows-5.grid-cols-1", [
       h("div.col-span-1.row-span-1"),
       h("div.col-span-1.row-span-1.border.border-black.border-r-0.box-border"),
       h("div.col-span-1.row-span-1"),
@@ -31,36 +31,30 @@ const twoRooms = (room1: string, room2: string) =>
     ),
   ]);
 
-const withTopRightLift = (construction: Element) =>
-  h("div.flex.flex-row", [
-    construction,
-    h("div.grid.grid-cols-1.grid-rows-2.h-32.w-16", [
-      h(
-        "div.col-span-1.row-span-1.grid.grid-rows-1.grid-cols-2",
-        h("div.col-span-1.row-span-1"),
-        h(
-          "div.col-span-1.row-span-1.border.border-black.flex.justify-center.items-center",
-          h("span.inline-block.rotate-90", "LIFT")
-        )
-      ),
+const topRightLift = () =>
+  h("div.grid.grid-cols-1.grid-rows-2.h-32.w-16", [
+    h(
+      "div.col-span-1.row-span-1.grid.grid-rows-1.grid-cols-2",
       h("div.col-span-1.row-span-1"),
-    ]),
+      h(
+        "div.col-span-1.row-span-1.border.border-black.flex.justify-center.items-center",
+        h("span.inline-block.rotate-90", "LIFT")
+      )
+    ),
+    h("div.col-span-1.row-span-1"),
   ]);
 
-const withBottomRightLift = (construction: Element) =>
-  h("div.flex.flex-row", [
-    construction,
-    h("div.grid.grid-cols-1.grid-rows-2.h-32.w-16", [
+const bottomRightLift = () =>
+  h("div.grid.grid-cols-1.grid-rows-2.h-32.w-16", [
+    h("div.col-span-1.row-span-1"),
+    h(
+      "div.col-span-1.row-span-1.grid.grid-rows-1.grid-cols-2",
       h("div.col-span-1.row-span-1"),
       h(
-        "div.col-span-1.row-span-1.grid.grid-rows-1.grid-cols-2",
-        h("div.col-span-1.row-span-1"),
-        h(
-          "div.col-span-1.row-span-1.border.border-black.flex.justify-center.items-center",
-          h("span.inline-block.rotate-90", "LIFT")
-        )
-      ),
-    ]),
+        "div.col-span-1.row-span-1.border.border-black.flex.justify-center.items-center",
+        h("span.inline-block.rotate-90", "LIFT")
+      )
+    ),
   ]);
 
 const classroom = (name: string) =>
@@ -80,26 +74,28 @@ root.appendChild(
     "div.grid.grid-cols-5.grid-rows-5.w-fit",
     {
       style:
-        "grid-template-rows:repeat(5,auto);grid-template-columns:repeat(5,auto)",
+        "grid-template-rows:repeat(5,auto);grid-template-columns:repeat(6,auto)",
     },
     [
-      [YES("STAIRS"), NO(), YES("STAIRS"), NO(), NO()],
+      [NO(), YES("STAIRS"), NO(), YES("STAIRS"), NO(), NO()],
       [
-        YES(withTopRightLift(twoDoors("A9.100"))),
+        YES(twoDoors("A9.100")),
+        topRightLift(),
         rowOfClassrooms(),
         YES(),
         YES(),
         YES(),
       ],
-      [YES(), NO(), NO(), NO(), NO()],
+      [YES(), NO(), NO(), NO(), NO(), NO()],
       [
-        YES(withBottomRightLift(twoRooms("A6.222", "A1.999"))),
+        YES(twoRooms("A6.222", "A1.999")),
+        bottomRightLift(),
         YES(),
         YES(),
         YES(),
         YES(),
       ],
-      [YES("STAIRS"), NO(), YES("STAIRS"), NO(), NO()],
+      [YES("STAIRS"), NO(), NO(), YES("STAIRS"), NO(), NO()],
     ]
   )
 );
