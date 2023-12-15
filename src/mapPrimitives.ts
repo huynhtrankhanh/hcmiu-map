@@ -1,6 +1,7 @@
-import h from 'hyperscript' 
+import h from "hyperscript";
 
-export const YES = (children?: any) => h("div.col-span-1.bg-yellow-200", children);
+export const YES = (children?: any) =>
+  h("div.col-span-1.bg-yellow-200", children);
 export const NO = () => h("div.col-span-1");
 
 export const twoDoors = (name: string) =>
@@ -16,6 +17,21 @@ export const twoDoors = (name: string) =>
       h("div.col-span-1.row-span-1.border.border-black.border-r-0.box-border"),
       h("div.col-span-1.row-span-1"),
     ]),
+  ]);
+
+export const twoDoorsRight = (name: string) =>
+  h("div.flex.flex-row.w-24.h-32.border.border-black", [
+    h("div.col-span-1.h-full.w-4.grid.grid-rows-5.grid-cols-1", [
+      h("div.col-span-1.row-span-1"),
+      h("div.col-span-1.row-span-1.border.border-black.border-l-0.box-border"),
+      h("div.col-span-1.row-span-1"),
+      h("div.col-span-1.row-span-1.border.border-black.border-l-0.box-border"),
+      h("div.col-span-1.row-span-1"),
+    ]),
+    h(
+      "div.col-span-1.h-full.w-20.flex.justify-center.items-center",
+      h("span.inline-block", name)
+    ),
   ]);
 
 export const twoRooms = (room1: string, room2: string) =>

@@ -14,6 +14,7 @@ import {
   twoRooms,
   bottomRightLift,
   bottomLeftLift,
+  twoDoorsRight,
 } from "./mapPrimitives";
 
 export const element = h(
@@ -47,7 +48,7 @@ export const element = h(
       ]),
       topLeftLift(),
       notRoom(),
-      YES(twoDoors("A2.104")),
+      YES(twoDoorsRight("A2.104")),
     ],
     [YES(library("1ST FLOOR LIBRARY")), YES(), NO(), NO(), NO(), NO()],
     [
@@ -73,7 +74,7 @@ export const element = h(
       ]),
       bottomLeftLift(),
       notRoom(),
-      YES(twoDoors("A1.109")),
+      YES(twoDoorsRight("A1.109")),
     ],
     [NO(), YES(stairs()), NO(), YES(stairs()), NO(), NO()],
   ]
