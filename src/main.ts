@@ -5,7 +5,7 @@ const YES = (children?: any) =>
 const NO = () => h("div.col-span-1");
 
 const twoDoors = (name: string) =>
-  h("div.flex.flex-row.w-fit.h-full.border.border-black", [
+  h("div.flex.flex-row.w-24.h-32.border.border-black", [
     h(
       "div.col-span-1.h-full.w-20.flex.justify-center.items-center",
       h("span.inline-block", name)
@@ -32,7 +32,7 @@ const twoRooms = (room1: string, room2: string) =>
   ]);
 
 const topRightLift = () =>
-  h("div.grid.grid-cols-1.grid-rows-2.h-32.w-16", [
+  h("div.grid.grid-cols-1.grid-rows-2.mr-1.pb-5", [
     h(
       "div.col-span-1.row-span-1.grid.grid-rows-1.grid-cols-2",
       h("div.col-span-1.row-span-1"),
@@ -45,7 +45,7 @@ const topRightLift = () =>
   ]);
 
 const bottomRightLift = () =>
-  h("div.grid.grid-cols-1.grid-rows-2.h-32.w-16", [
+  h("div.grid.grid-cols-1.grid-rows-2.mr-1.pt-5", [
     h("div.col-span-1.row-span-1"),
     h(
       "div.col-span-1.row-span-1.grid.grid-rows-1.grid-cols-2",
@@ -59,13 +59,19 @@ const bottomRightLift = () =>
 
 const classroom = (name: string) =>
   h(
-    "div.w-20.h-16.border.border-black.flex.justify-center.items-center",
+    "div.w-20.h-15.border.border-black.flex.justify-center.items-center",
     h("span.inline-block", name)
   );
 const rowOfClassrooms = () =>
   h(
     "div.grid.grid-cols-6.grid-rows-2.gap-x-2.gap-y-5",
     Array.from({ length: 12 }, () => classroom("A6.111"))
+  );
+
+const stairs = () =>
+  h(
+    "div.p-1.col-span-1.row-span-1.flex",
+    h("div.border.border-black.w-full.h-full.text-center", "STAIRS")
   );
 
 const root = document.querySelector<HTMLDivElement>("#app")!;
@@ -77,7 +83,7 @@ root.appendChild(
         "grid-template-rows:repeat(5,auto);grid-template-columns:repeat(6,auto)",
     },
     [
-      [NO(), YES("STAIRS"), NO(), YES("STAIRS"), NO(), NO()],
+      [NO(), stairs(), NO(), stairs(), NO(), NO()],
       [
         YES(twoDoors("A9.100")),
         topRightLift(),
@@ -95,7 +101,7 @@ root.appendChild(
         YES(),
         YES(),
       ],
-      [YES("STAIRS"), NO(), NO(), YES("STAIRS"), NO(), NO()],
+      [NO(), stairs(), NO(), stairs(), NO(), NO()],
     ]
   )
 );
