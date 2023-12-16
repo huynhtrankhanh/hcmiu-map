@@ -34,6 +34,21 @@ export const twoDoorsRight = (name: string) =>
     ),
   ]);
 
+export const oneBottomDoorRight = (name: string) =>
+  h("div.flex.flex-row.w-24.h-32.border.border-black", [
+    h("div.col-span-1.h-full.w-4.grid.grid-rows-5.grid-cols-1", [
+      h("div.col-span-1.row-span-1"),
+      h("div.col-span-1.row-span-1"),
+      h("div.col-span-1.row-span-1"),
+      h("div.col-span-1.row-span-1.border.border-black.border-l-0.box-border"),
+      h("div.col-span-1.row-span-1"),
+    ]),
+    h(
+      "div.col-span-1.h-full.w-20.flex.justify-center.items-center",
+      h("span.inline-block", name)
+    ),
+  ]);
+
 export const twoRooms = (room1: string, room2: string) =>
   h("div.col-span-1.h-32.w-24.grid.grid-rows-2.grid-cols-1", [
     h(
@@ -59,14 +74,16 @@ export const topRightLift = () =>
     h("div.col-span-1.row-span-1"),
   ]);
 
-export const notRoom = (name?: string) => {
+export const notRoom = (name?: string, consumeHalf: boolean = false) => {
   if (name === undefined) {
     return h("div.col-span-1.row-span-1.w-24.h-32.bg-yellow-200");
   }
   return h(
-    "div.col-span-1.row-span-1.w-24.h-32.bg-yellow-200.box-border.p-2.flex.items-center.justify-center",
+    "div.col-span-1.row-span-1.w-24.h-32.bg-yellow-200.box-border.p-2.flex.justify-center" +
+      (consumeHalf ? "" : ".items-center"),
     h(
       "div.w-full.h-full.border.border-black.flex.items-center.justify-center.text-center",
+      { style: consumeHalf ? "height:50%" : "" },
       h("span.inline-block", name)
     )
   );
