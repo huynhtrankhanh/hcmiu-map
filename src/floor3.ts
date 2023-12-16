@@ -50,7 +50,7 @@ export const element = h(
       notRoom(),
       YES(twoDoorsRight("A2.307")),
     ],
-    [YES(library("")), YES(), NO(), NO(), NO(), NO()],
+    [YES(library("")), YES(), NO(), YES(), YES(), YES()],
     [
       YES(twoRooms("LA1.302", "LA1.301")),
       bottomRightLift(),
