@@ -5,6 +5,7 @@ import * as floor4 from "./floor4";
 import * as floor5 from "./floor5";
 import * as floor6 from "./floor6";
 import * as floor7 from "./floor7";
+import "./superimpose";
 import "./style.css";
 
 const root = document.querySelector<HTMLDivElement>("#app")!;
@@ -18,12 +19,11 @@ root.appendChild(floor7.element);
 
 (window as unknown as any).relativeTo = (
   supposedParent: Element,
-  child: Element
+  [x, y]: [number, number]
 ) => {
   const parentRectangle = supposedParent.getBoundingClientRect();
-  const childRectangle = child.getBoundingClientRect();
   return {
-    top: childRectangle.top - parentRectangle.top,
-    left: childRectangle.left - parentRectangle.left,
+    x: x - parentRectangle.left,
+    y: y - parentRectangle.top,
   };
 };
