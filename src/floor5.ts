@@ -3,7 +3,6 @@ import {
   NO,
   YES,
   stairs,
-  twoDoors,
   topRightLift,
   classrooms,
   classroom,
@@ -14,7 +13,6 @@ import {
   twoRooms,
   bottomRightLift,
   bottomLeftLift,
-  twoDoorsRight,
 } from "./mapPrimitives";
 
 export const element = h(

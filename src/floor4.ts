@@ -3,7 +3,6 @@ import {
   NO,
   YES,
   stairs,
-  twoDoors,
   topRightLift,
   classrooms,
   classroom,
