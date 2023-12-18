@@ -15,3 +15,15 @@ root.appendChild(floor4.element);
 root.appendChild(floor5.element);
 root.appendChild(floor6.element);
 root.appendChild(floor7.element);
+
+(window as unknown as any).relativeTo = (
+  supposedParent: Element,
+  child: Element
+) => {
+  const parentRectangle = supposedParent.getBoundingClientRect();
+  const childRectangle = child.getBoundingClientRect();
+  return {
+    top: childRectangle.top - parentRectangle.top,
+    left: childRectangle.left - parentRectangle.left,
+  };
+};
