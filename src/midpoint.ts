@@ -1,4 +1,0 @@
-export const midpoint = (
-  [x1, y1]: [number, number],
-  [x2, y2]: [number, number]
-): [number, number] => [(x1 + x2) / 2, (y1 + y2) / 2];
