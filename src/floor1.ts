@@ -16,8 +16,6 @@ import {
   bottomLeftLift,
   twoDoorsRight,
 } from "./mapPrimitives";
-import { createLine, dotAt, labelAt } from "./superimpose";
-import { points } from "./points"
 
 export const element = h(
   "div.grid.grid-cols-5.grid-rows-5.w-fit",
@@ -82,11 +80,6 @@ export const element = h(
   ]
 );
 
-
-points.forEach((point, index) =>
-  document.body.appendChild(labelAt(...point, index + ""))
-);
-points.forEach((point) => document.body.appendChild(dotAt(...point)));
 export const graph: [number, number][] = [
   [0, 5],
   [5, 4],
@@ -133,7 +126,3 @@ export const graph: [number, number][] = [
   [51, 50],
   [54, 52],
 ];
-
-graph.forEach((edge) =>
-  document.body.appendChild(createLine(...points[edge[0]], ...points[edge[1]]))
-);

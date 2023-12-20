@@ -7,12 +7,14 @@ import * as floor6 from "./floor6";
 import * as floor7 from "./floor7";
 import "./superimpose";
 import "./style.css";
+import { createLine, dotAt, labelAt } from "./superimpose";
+import { points } from "./points";
+import h from "hyperscript";
 
 const root = document.querySelector<HTMLDivElement>("#app")!;
-root.appendChild(floor1.element);
-root.appendChild(floor2.element);
-root.appendChild(floor3.element);
-root.appendChild(floor4.element);
-root.appendChild(floor5.element);
-root.appendChild(floor6.element);
-root.appendChild(floor7.element);
+[floor1,floor2,floor3,floor4,floor5,floor6,floor7].forEach(floor => {
+  const outer = h("div.relative", floor.element);
+  points.forEach(x => outer.appendChild(dotAt(...x)))
+  floor.graph.forEach(([u,v]) => outer.appendChild(createLine(...points[u], ...points[v])))
+  document.body.appendChild(outer)
+})
