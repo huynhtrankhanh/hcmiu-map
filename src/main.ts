@@ -16,5 +16,5 @@ const root = document.querySelector<HTMLDivElement>("#app")!;
   const outer = h("div.relative", floor.element);
   points.forEach(x => outer.appendChild(dotAt(...x)))
   floor.graph.forEach(([u,v]) => outer.appendChild(createLine(...points[u], ...points[v])))
-  document.body.appendChild(outer)
+  root.appendChild(outer)
 })
