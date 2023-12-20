@@ -7,7 +7,7 @@ import * as floor6 from "./floor6";
 import * as floor7 from "./floor7";
 import "./superimpose";
 import "./style.css";
-import { createLine, dotAt, labelAt } from "./superimpose";
+import { createLine, dotAt } from "./superimpose";
 import { points } from "./points";
 import h from "hyperscript";
 
