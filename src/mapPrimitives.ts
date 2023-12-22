@@ -160,10 +160,10 @@ export const bottomLeftLift = () =>
     ),
   ]);
 
-export const classroom = (name: string) =>
+export const classroom = (name: string, constructName: string = name) =>
   h(
     "div.w-20.h-15.border.border-black.flex.justify-center.items-center",
-    { "data-isconstruct": true, "data-constructname": name },
+    { "data-isconstruct": true, "data-constructname": constructName },
     h("span.inline-block", name)
   );
 export const occupy = () => h("div.w-20.h-15");
@@ -179,6 +179,6 @@ export const stairs = () =>
 export const library = (name: string) =>
   h(
     "div.border.border-black.border-t-0.border-b-0.flex.w-24.h-32.items-center.justify-center.p-2.box-border",
-    { "data-isconstruct": true, "data-constructname": name },
+    name === "" ? {} : { "data-isconstruct": true, "data-constructname": name },
     h("span.inline-block.text-center", name)
   );
