@@ -54,11 +54,28 @@ const mapPositionToNode = (() => {
     map.get(JSON.stringify([Math.trunc(x), Math.trunc(y)]));
 })();
 
+const mapping = Array.from({ length: 7 }, () => new Map<number, string[]>());
+
 for (const label of labels) {
   const { top: y, left: x } = label.getBoundingClientRect();
-  const constructNode = mapPositionToNode(x, y)
+  const constructNode = mapPositionToNode(x, y);
   if (constructNode === undefined) {
-    (label as HTMLElement).style.display = "none"
-    continue
+    (label as HTMLElement).style.display = "none";
+    continue;
   }
+
+  const floor = floors.findIndex((floor) =>
+    floor.element.contains(constructNode)
+  );
+  const currentFloorMap = mapping[floor];
+  const existingList = currentFloorMap.get(Number(label.textContent));
+
+  const constructName = constructNode.getAttribute("data-constructname")!;
+
+  if (constructName === "LIFT") continue;
+  if (existingList === undefined)
+    currentFloorMap.set(Number(label.textContent), [constructName]);
+  else existingList.push(constructName);
 }
+
+console.log(mapping);
