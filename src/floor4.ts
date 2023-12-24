@@ -16,7 +16,7 @@ import {
   twoDoorsRight,
 } from "./mapPrimitives";
 
-export const element = h(
+export const element = () => h(
   "div.grid.grid-cols-5.grid-rows-5.w-fit",
   {
     style:

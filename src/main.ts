@@ -11,6 +11,7 @@ import { createLine, dotAt, labelAt } from "./superimpose";
 import { shortestPath } from "./shortestPath";
 import { points } from "./points";
 import h from "hyperscript";
+import { MapView } from "./MapView"
 
 const a2LiftLeft = 4;
 const a2LiftRight = 27;
@@ -20,16 +21,4 @@ const a1LiftRight = 36;
 const floors = [floor1, floor2, floor3, floor4, floor5, floor6, floor7];
 
 const root = document.querySelector<HTMLDivElement>("#app")!;
-floors.forEach((floor) => {
-  const outer = h(
-    "div.relative",
-    { style: "width:953.31px;height:452px" },
-    floor.element
-  );
-  points.forEach((x) => outer.appendChild(dotAt(...x)));
-  points.forEach((x, index) => outer.appendChild(labelAt(...x, String(index))));
-
-  // const path = shortestPath(floor.graph, 24, 43);
-  // for (let i = 1; i < path.length; i++) outer.appendChild(createLine(...points[path[i-1]], ...points[path[i]]))
-  root.appendChild(outer);
-});
+root.appendChild(MapView().element)
