@@ -25,6 +25,7 @@ export const MapView = () => {
 
   const applyScale = () => {
     mapElement.style.transform = "scale(" + currentScale / 100 + ")";
+    mapElement.style.transformOrigin = "top left";
   };
 
   applyScale();
@@ -32,7 +33,8 @@ export const MapView = () => {
   const element = h(
     "div.flex.flex-col.items-center.justify-center.h-screen.bg-[#F3F4F6]",
     h(
-      "div.bg-white.p-8.rounded-lg.shadow-md.w-full.max-w-sm",
+      "div.bg-white.p-8.rounded-lg.shadow-md.w-full",
+      { style: "max-width:72rem" },
       h(
         "div.mb-6",
 
