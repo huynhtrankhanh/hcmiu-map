@@ -2,13 +2,13 @@ import h from "hyperscript";
 import { generateRandomString } from "./generateRandomString";
 import { SuggestBox } from "./SuggestBox";
 import { mapPointToConstructName } from "./mapPointToConstructName";
-import { liftPositions } from "./liftPositions";
+import { liftPositionsReverseMap } from "./liftPositions";
 
 const emptyArray: string[] = [];
 
 const candidates = emptyArray.concat(
   ...mapPointToConstructName.map((map, index) =>
-    Object.values({ ...map, ...liftPositions }).map(
+    Object.values({ ...map, ...liftPositionsReverseMap }).map(
       (x) => "Floor " + (index + 1) + ": " + x
     )
   )
