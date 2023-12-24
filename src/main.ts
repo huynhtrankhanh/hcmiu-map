@@ -8,10 +8,12 @@ import * as floor7 from "./floor7";
 import "./superimpose";
 import "./style.css";
 import { createLine, dotAt, labelAt } from "./superimpose";
-import { shortestPath } from "./shortestPath";
+import { shortestPath } from "./getShortestPath";
 import { points } from "./points";
 import h from "hyperscript";
 import { MapView } from "./MapView"
+import { App } from "./App";
+import { ShortestPath } from "./ShortestPath"
 
 const a2LiftLeft = 4;
 const a2LiftRight = 27;
@@ -21,4 +23,4 @@ const a1LiftRight = 36;
 const floors = [floor1, floor2, floor3, floor4, floor5, floor6, floor7];
 
 const root = document.querySelector<HTMLDivElement>("#app")!;
-root.appendChild(MapView().element)
+root.appendChild(App().element)
