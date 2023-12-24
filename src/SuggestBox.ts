@@ -1,6 +1,6 @@
 import h from "hyperscript";
 
-export function SuggestBox(candidates: string[]) {
+export function SuggestBox(candidates: string[], inputId?: string) {
   let searchTerm = "";
   let suggestions: string[] = [];
 
@@ -37,7 +37,7 @@ export function SuggestBox(candidates: string[]) {
   };
 
   const updateSuggestions = () => {
-    const suggestionElements = suggestions.map((suggestion, index) =>
+    const suggestionElements = suggestions.map((suggestion) =>
       h(
         "div.px-4.py-2.border-b.border-gray-300.cursor-pointer.hover:bg-gray-100",
         {
@@ -66,16 +66,17 @@ export function SuggestBox(candidates: string[]) {
     "input.block.w-full.px-4.py-2.border.border-gray-300.rounded-md.shadow-sm.placeholder-gray-400",
     {
       type: "text",
-      name: "searchFruits",
-      placeholder: "Search fruits...",
+      placeholder: "Search…",
       value: searchTerm,
       oninput: handleChange,
       onfocus: handleChange,
+      id: inputId,
     }
   );
 
   const suggestionsContainer = h(
-    "div.absolute.w-full.mt-1.rounded-md.bg-white.shadow-lg.max-h-60.overflow-auto.invisible"
+    "div.absolute.w-full.mt-1.rounded-md.bg-white.shadow-lg.max-h-60.overflow-auto.invisible",
+    { style: "z-index:100000" }
   );
 
   const containerElement = h("div.relative.w-full.max-w-md", [
