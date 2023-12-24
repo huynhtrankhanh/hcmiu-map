@@ -2,25 +2,42 @@ import h from "hyperscript";
 import { MapView } from "./MapView";
 import { ShortestPath } from "./ShortestPath";
 
-const MapViewPage = () => {
+const MapViewPage = (onExit?: () => void) => {
   const element = h(
     "div.flex.flex-col.items-center.justify-center.h-screen",
     { style: "background:#F3F4F6" },
     h(
       "div.bg-white.p-8.rounded-lg.shadow-md.w-full",
       { style: "max-width:72rem" },
+      h(
+        "button.bg-red-500.text-white.px-4.py-2.rounded.w-full.mb-3",
+        {
+          onclick: () => {
+            if (onExit !== undefined) onExit();
+          },
+        },
+        "Exit"
+      ),
       MapView().element
     )
   );
   return { element };
 };
 
-const ShortestPathPage = () => {
+const ShortestPathPage = (onExit?: () => void) => {
   const element = h(
     "div.flex.flex-col.items-center.justify-center.h-screen",
     { style: "background:#F3F4F6" },
     h(
-      "div.bg-white.p-8.rounded-lg.shadow-md.w-full.max-w-md",
+      "div.bg-white.p-8.rounded-lg.shadow-md.w-full.max-w-md",    h(
+        "button.bg-red-500.text-white.px-4.py-2.rounded.w-full.mb-3",
+        {
+          onclick: () => {
+            if (onExit !== undefined) onExit();
+          },
+        },
+        "Exit"
+      ),
       ShortestPath().element
     )
   );
@@ -80,6 +97,11 @@ export const App = () => {
     | "traveling salesman" = "landing";
   const element = h("div");
   const transition = (): null => {
+    const exit = () => {
+      currentPage = "landing";
+      transition();
+    };
+
     element.innerHTML = "";
     switch (currentPage) {
       case "landing": {
@@ -102,11 +124,11 @@ export const App = () => {
         return null;
       }
       case "map view": {
-        element.appendChild(MapViewPage().element)
+        element.appendChild(MapViewPage(exit).element);
         return null;
       }
       case "shortest path": {
-        element.appendChild(ShortestPathPage().element)
+        element.appendChild(ShortestPathPage(exit).element);
         return null;
       }
       case "traveling salesman": {
