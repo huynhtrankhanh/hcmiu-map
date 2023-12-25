@@ -14,12 +14,32 @@ const candidates = emptyArray.concat(
   )
 );
 
-export function ShortestPath() {
+export function ShortestPathForm(
+  defaultFrom: string = "",
+  defaultTo: string = "",
+  onChange?: (from: string, to: string) => void,
+  onChooseSourceOnMap?: () => void,
+  onChooseDestinationOnMap?: () => void
+) {
   const fromFieldId = generateRandomString();
   const toFieldId = generateRandomString();
 
-  const fromField = SuggestBox(candidates, fromFieldId);
-  const toField = SuggestBox(candidates, toFieldId);
+  const fromField = SuggestBox(
+    candidates,
+    fromFieldId,
+    () => {
+      onChange && onChange(fromField.getInput(), toField.getInput());
+    },
+    defaultFrom
+  );
+  const toField = SuggestBox(
+    candidates,
+    toFieldId,
+    () => {
+      onChange && onChange(fromField.getInput(), toField.getInput());
+    },
+    defaultTo
+  );
 
   const element = h(
     "div.flex.flex-col.items-center.justify-center",
@@ -36,7 +56,12 @@ export function ShortestPath() {
           h("span.px-3.font-roboto.text-sm", "or"),
           h(
             "button.bg-blue-500.text-white.font-roboto.px-4.py-1.rounded",
-            { type: "button" },
+            {
+              type: "button",
+              onclick: () => {
+                onChooseSourceOnMap && onChooseSourceOnMap();
+              },
+            },
             "Choose on Map"
           )
         )
@@ -51,7 +76,12 @@ export function ShortestPath() {
           h("span.px-3.text-sm]", "or"),
           h(
             "button.bg-blue-500.text-white.px-4.py-1.rounded",
-            { type: "button" },
+            {
+              type: "button",
+              onclick: () => {
+                onChooseDestinationOnMap && onChooseDestinationOnMap();
+              },
+            },
             "Choose on Map"
           )
         )

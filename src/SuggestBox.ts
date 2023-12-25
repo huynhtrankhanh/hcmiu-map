@@ -1,7 +1,11 @@
 import h from "hyperscript";
 
-export function SuggestBox(candidates: string[], inputId?: string) {
-  let searchTerm = "";
+export function SuggestBox(
+  candidates: string[],
+  inputId?: string,
+  onChange?: (x: string) => void,
+  searchTerm: string = ""
+) {
   let suggestions: string[] = [];
 
   const handleChange = (event: Event) => {
@@ -21,6 +25,7 @@ export function SuggestBox(candidates: string[], inputId?: string) {
     suggestions = [];
     updateSuggestions();
     (inputElement as HTMLInputElement).value = suggestion;
+    if (onChange) onChange(suggestion);
   };
 
   const highlightMatch = (text: string) => {
@@ -68,7 +73,10 @@ export function SuggestBox(candidates: string[], inputId?: string) {
       type: "text",
       placeholder: "Search…",
       value: searchTerm,
-      oninput: handleChange,
+      oninput: (event: Event) => {
+        if (onChange) onChange((inputElement as HTMLInputElement).value);
+        handleChange(event);
+      },
       onfocus: handleChange,
       id: inputId,
     }

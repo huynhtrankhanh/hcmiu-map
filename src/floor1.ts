@@ -24,7 +24,7 @@ export const element = () => h(
       "grid-template-rows:repeat(5,auto);grid-template-columns:repeat(6,auto)",
   },
   [
-    [NO(), YES(stairs()), NO(), YES(stairs()), NO(), NO()],
+    [NO(), stairs(), NO(), stairs(), NO(), NO()],
     [
       YES(twoDoors("O2.101")),
       topRightLift(),
@@ -76,7 +76,7 @@ export const element = () => h(
       notRoom(),
       YES(twoDoorsRight("A1.109")),
     ],
-    [NO(), YES(stairs()), NO(), YES(stairs()), NO(), NO()],
+    [NO(), stairs(), NO(), stairs(), NO(), NO()],
   ]
 );
 

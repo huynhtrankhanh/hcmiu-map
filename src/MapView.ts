@@ -1,7 +1,10 @@
 import h from "hyperscript";
-import { floors } from "./floors"
+import { floors } from "./floors";
 
-export const MapView = () => {
+export const MapView = (config?: {
+  type: "choose on map";
+  onChoose: (constructName: string) => void;
+}) => {
   let currentFloor: number = 0;
 
   const mapElement = h("div", { style: "width:953.31px;height:452px" });
@@ -9,6 +12,31 @@ export const MapView = () => {
   const renderCurrentFloor = () => {
     mapElement.innerHTML = "";
     mapElement.appendChild(floors[currentFloor].element());
+    if (config?.type === "choose on map") {
+      mapElement
+        .querySelectorAll("[data-isstairs]")
+        .forEach((node) => ((node as HTMLDivElement).style.opacity = "30%"));
+      mapElement.querySelectorAll("[data-isconstruct]").forEach((construct) => {
+        construct.addEventListener("click", () => {
+          config.onChoose(
+            "Floor " +
+              (currentFloor + 1) +
+              ": " +
+              construct.getAttribute("data-constructname")!
+          );
+          mapElement
+            .querySelectorAll("[data-constructselected]")
+            .forEach((x) => {
+              x.removeAttribute("data-constructselected");
+              (x as HTMLDivElement).style.fontWeight = "";
+              (x as HTMLDivElement).style.textDecoration = "";
+            });
+          construct.setAttribute("data-constructselected", "");
+          (construct as HTMLDivElement).style.fontWeight = "bold";
+          (construct as HTMLDivElement).style.textDecoration = "underline";
+        });
+      });
+    }
   };
 
   renderCurrentFloor();

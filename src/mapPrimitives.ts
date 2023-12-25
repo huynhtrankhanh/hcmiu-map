@@ -172,7 +172,8 @@ export const classrooms = (rooms: any[]) =>
 
 export const stairs = () =>
   h(
-    "div.p-1.col-span-1.row-span-1.flex",
+    "div.p-1.col-span-1.row-span-1.flex.bg-yellow-200",
+    { "data-isstairs": "" },
     h("div.border.border-black.w-full.h-full.text-center", "STAIRS")
   );
 
