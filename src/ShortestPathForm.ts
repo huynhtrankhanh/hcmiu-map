@@ -14,6 +14,8 @@ const candidates = emptyArray.concat(
   )
 );
 
+const candidateSet = new Set(candidates);
+
 export function ShortestPathForm(
   defaultFrom: string = "",
   defaultTo: string = "",
@@ -41,15 +43,48 @@ export function ShortestPathForm(
     defaultTo
   );
 
+  const fromFieldError = h(
+    "div.text-red-500.mt-2",
+    { style: "display:none" },
+    "Please choose a valid starting point"
+  );
+  const toFieldError = h(
+    "div.text-red-500.mt-2",
+    { style: "display:none" },
+    "Please choose a valid destination"
+  );
+
+  const samePlacesError = h("div.text-red-500", {style: "display:none"}, "Please choose different places for starting point and destination")
+
   const element = h(
     "div.flex.flex-col.items-center.justify-center",
     h("h1.text-xl.mb-4", "Shortest Path"),
     h(
       "form.w-full.max-w-lg.space-y-6",
+      {
+        onsubmit: (event: Event) => {
+          event.preventDefault();
+          (fromFieldError as HTMLDivElement).style.display = "none";
+          (toFieldError as HTMLDivElement).style.display = "none";
+          let bothValid = true
+          if (!candidateSet.has(fromField.getInput())) {
+            bothValid = false;
+            (fromFieldError as HTMLDivElement).style.display = "block";
+          }
+          if (!candidateSet.has(toField.getInput())) {
+            bothValid=false;
+            (toFieldError as HTMLDivElement).style.display = "block";
+          }
+          if (bothValid && fromField.getInput() === toField.getInput()) {
+            (samePlacesError as HTMLDivElement).style.display = "block"
+          }
+        },
+      },
       h(
         "div.flex.flex-col",
         h("label.font-roboto.mb-2.text-lg", { for: fromFieldId }, "From"),
         fromField.element,
+        fromFieldError,
         h(
           "div.flex.items-center.justify-center.my-2",
           h("div.flex-grow.border-t.border-gray-300"),
@@ -70,6 +105,7 @@ export function ShortestPathForm(
         "div.flex.flex-col",
         h("label.font-roboto.mb-2.text-lg", { for: toFieldId }, "To"),
         toField.element,
+        toFieldError,
         h(
           "div.flex.items-center.justify-center.my-2",
           h("div.flex-grow.border-t.border-gray-300"),
@@ -85,7 +121,7 @@ export function ShortestPathForm(
             "Choose on Map"
           )
         )
-      ),
+      ),samePlacesError,
       h(
         "button.bg-green-500.text-white.px-4.py-2.rounded.w-full",
         { type: "submit" },
