@@ -92,7 +92,7 @@ export const topRightLift = () =>
       h("div.col-span-1.row-span-1"),
       h(
         "div.col-span-1.row-span-1.border.border-black.flex.justify-center.items-center",
-        { "data-isconstruct": true, "data-constructname": "LIFT (A2, right)" },
+        { "data-isconstruct": true, "data-constructname": "LIFT (A2, left)" },
         h("span.inline-block.rotate-90", "LIFT")
       )
     ),
@@ -126,7 +126,7 @@ export const bottomRightLift = () =>
       h("div.col-span-1.row-span-1"),
       h(
         "div.col-span-1.row-span-1.border.border-black.flex.justify-center.items-center",
-        { "data-isconstruct": true, "data-constructname": "LIFT (A1, right)" },
+        { "data-isconstruct": true, "data-constructname": "LIFT (A1, left)" },
         h("span.inline-block.rotate-90", "LIFT")
       )
     ),
@@ -138,7 +138,7 @@ export const topLeftLift = () =>
       "div.col-span-1.row-span-1.grid.grid-rows-1.grid-cols-2.pl-1",
       h(
         "div.col-span-1.row-span-1.border.border-black.flex.justify-center.items-center",
-        { "data-isconstruct": true, "data-constructname": "LIFT (A2, left)" },
+        { "data-isconstruct": true, "data-constructname": "LIFT (A2, right)" },
         h("span.inline-block.rotate-90", "LIFT")
       ),
       h("div.col-span-1.row-span-1")
@@ -153,7 +153,7 @@ export const bottomLeftLift = () =>
       "div.col-span-1.row-span-1.grid.grid-rows-1.grid-cols-2.pl-1",
       h(
         "div.col-span-1.row-span-1.border.border-black.flex.justify-center.items-center",
-        { "data-isconstruct": true, "data-constructname": "LIFT (A1, left)" },
+        { "data-isconstruct": true, "data-constructname": "LIFT (A1, right)" },
         h("span.inline-block.rotate-90", "LIFT")
       ),
       h("div.col-span-1.row-span-1")
