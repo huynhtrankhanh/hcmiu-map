@@ -1,6 +1,6 @@
 import h from "hyperscript";
 import { floors } from "./floors";
-import { createLine } from "./superimpose";
+import { createLine, labelAt } from "./superimpose";
 import { points } from "./points";
 
 export const MapView = (
@@ -58,9 +58,13 @@ export const MapView = (
 
     config.changeLegHook((leg) => {
       currentFloor = legs[leg].floor;
-      renderCurrentFloor();
+      renderCurrentFloor()
 
       const path = legs[leg].path;
+
+      if (path.length === 1) {
+        mapElement.appendChild(labelAt(...points[path[0]], "X"))
+      }
       for (let i = 1; i < path.length; i++) {
         mapElement.appendChild(
           createLine(...points[path[i - 1]], ...points[path[i]])
