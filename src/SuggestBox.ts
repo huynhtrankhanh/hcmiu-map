@@ -79,6 +79,14 @@ export function SuggestBox(
       },
       onfocus: handleChange,
       id: inputId,
+      onblur: (event: any) => {
+        if (event.relatedTarget === document.body) return;
+        if (suggestionsContainer.contains(event.relatedTarget)) return;
+        if (event.relatedTarget === null) return;
+        console.log("blur!", event.relatedTarget);
+        suggestions = [];
+        updateSuggestions();
+      },
     }
   );
 
