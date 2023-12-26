@@ -1,13 +1,25 @@
 import h from "hyperscript";
 import { floors } from "./floors";
+import { createLine } from "./superimpose";
+import { points } from "./points";
 
-export const MapView = (config?: {
-  type: "choose on map";
-  onChoose: (constructName: string) => void;
-}) => {
+export const MapView = (
+  config?:
+    | {
+        type: "choose on map";
+        onChoose: (constructName: string) => void;
+      }
+    | {
+        type: "display path";
+        legs: { floor: number; path: number[] }[];
+        changeLegHook: (legChanger: (x: number) => void) => void;
+      }
+) => {
   let currentFloor: number = 0;
 
-  const mapElement = h("div", { style: "width:953.31px;height:452px" });
+  const mapElement = h("div.relative", {
+    style: "width:953.31px;height:452px",
+  });
 
   const renderCurrentFloor = () => {
     mapElement.innerHTML = "";
@@ -41,11 +53,28 @@ export const MapView = (config?: {
 
   renderCurrentFloor();
 
+  if (config?.type === "display path") {
+    const legs = config.legs;
+
+    config.changeLegHook((leg) => {
+      currentFloor = legs[leg].floor;
+      renderCurrentFloor();
+
+      const path = legs[leg].path;
+      for (let i = 1; i < path.length; i++) {
+        mapElement.appendChild(
+          createLine(...points[path[i - 1]], ...points[path[i]])
+        );
+      }
+    });
+  }
+
   let currentScale = 100;
 
   const applyScale = () => {
-    mapElement.style.transform = "scale(" + currentScale / 100 + ")";
-    mapElement.style.transformOrigin = "top left";
+    (mapElement as HTMLDivElement).style.transform =
+      "scale(" + currentScale / 100 + ")";
+    (mapElement as HTMLDivElement).style.transformOrigin = "top left";
   };
 
   applyScale();
@@ -54,7 +83,6 @@ export const MapView = (config?: {
     "div",
     h(
       "div.mb-6",
-
       h(
         "select.block.appearance-none.w-full.border.py-3.px-4.pr-8.rounded.leading-tight.focus:outline-none.focus:bg-white.focus:border-[#6B7280]",
         {
@@ -63,6 +91,7 @@ export const MapView = (config?: {
             currentFloor = Number((event.target as HTMLSelectElement).value);
             renderCurrentFloor();
           },
+          style: config?.type === "display path" ? "display:none" : "display:block",
         },
         h("option", { value: "0" }, "Floor 1"),
         h("option", { value: "1" }, "Floor 2"),

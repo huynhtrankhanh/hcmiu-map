@@ -17,6 +17,10 @@
   },
   "dependencies": {
     "@types/hyperscript": "^0.0.7",
-    "hyperscript": "^2.0.2"
+    "@types/react": "^18.2.45",
+    "@types/react-dom": "^18.2.18",
+    "hyperscript": "^2.0.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   }
 }

@@ -21,7 +21,8 @@ export function ShortestPathForm(
   defaultTo: string = "",
   onChange?: (from: string, to: string) => void,
   onChooseSourceOnMap?: () => void,
-  onChooseDestinationOnMap?: () => void
+  onChooseDestinationOnMap?: () => void,
+  onSubmit?: () => void
 ) {
   const fromFieldId = generateRandomString();
   const toFieldId = generateRandomString();
@@ -54,7 +55,11 @@ export function ShortestPathForm(
     "Please choose a valid destination"
   );
 
-  const samePlacesError = h("div.text-red-500", {style: "display:none"}, "Please choose different places for starting point and destination")
+  const samePlacesError = h(
+    "div.text-red-500",
+    { style: "display:none" },
+    "Please choose different places for starting point and destination"
+  );
 
   const element = h(
     "div.flex.flex-col.items-center.justify-center",
@@ -66,18 +71,19 @@ export function ShortestPathForm(
           event.preventDefault();
           (fromFieldError as HTMLDivElement).style.display = "none";
           (toFieldError as HTMLDivElement).style.display = "none";
-          let bothValid = true
+          let bothValid = true;
           if (!candidateSet.has(fromField.getInput())) {
             bothValid = false;
             (fromFieldError as HTMLDivElement).style.display = "block";
           }
           if (!candidateSet.has(toField.getInput())) {
-            bothValid=false;
+            bothValid = false;
             (toFieldError as HTMLDivElement).style.display = "block";
           }
           if (bothValid && fromField.getInput() === toField.getInput()) {
-            (samePlacesError as HTMLDivElement).style.display = "block"
+            (samePlacesError as HTMLDivElement).style.display = "block";
           }
+          if (onSubmit) onSubmit();
         },
       },
       h(
@@ -121,7 +127,8 @@ export function ShortestPathForm(
             "Choose on Map"
           )
         )
-      ),samePlacesError,
+      ),
+      samePlacesError,
       h(
         "button.bg-green-500.text-white.px-4.py-2.rounded.w-full",
         { type: "submit" },
