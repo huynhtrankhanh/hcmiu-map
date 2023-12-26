@@ -115,7 +115,7 @@ export function ShortestPathForm(
         h(
           "div.flex.items-center.justify-center.my-2",
           h("div.flex-grow.border-t.border-gray-300"),
-          h("span.px-3.text-sm]", "or"),
+          h("span.px-3.text-sm", "or"),
           h(
             "button.bg-blue-500.text-white.px-4.py-1.rounded",
             {
