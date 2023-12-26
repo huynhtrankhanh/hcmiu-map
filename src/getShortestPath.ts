@@ -1,4 +1,10 @@
-function shortestPath(graph: [number, number][], start: number, end: number): number[] {
+import { liftPositions } from "./liftPositions";
+
+function shortestPath(
+  graph: [number, number][],
+  start: number,
+  end: number
+): number[] {
   const adjacencyList: Map<number, number[]> = new Map();
 
   // Build the adjacency list
@@ -38,4 +44,21 @@ function shortestPath(graph: [number, number][], start: number, end: number): nu
   return path;
 }
 
-export { shortestPath }
+function interfloorShortestPath(
+  floor1Graph: [number, number][],
+  floor2Graph: [number, number][],
+  source: number,
+  destination: number
+): [number[], number[]] | undefined {
+  let legs: [number[], number[]] | undefined;
+  for (const lift of Object.values(liftPositions)) {
+    const leg1 = shortestPath(floor1Graph, source, lift);
+    const leg2 = shortestPath(floor2Graph, lift, destination);
+    if (legs === undefined) legs = [leg1, leg2];
+    else if (leg1.length + leg2.length < legs[0].length + legs[1].length)
+      legs = [leg1, leg2];
+  }
+  return legs;
+}
+
+export { shortestPath, interfloorShortestPath };

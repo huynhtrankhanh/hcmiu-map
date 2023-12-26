@@ -1,4 +1,4 @@
-export const liftPositions = {
+export const liftPositions: Record<string, number> = {
   "LIFT (A2, left)": 4,
   "LIFT (A2, right)": 27,
   "LIFT (A1, left)": 8,

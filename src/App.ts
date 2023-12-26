@@ -2,6 +2,11 @@ import h from "hyperscript";
 import { MapView } from "./MapView";
 import { ShortestPathForm } from "./ShortestPathForm";
 import { CollapseList } from "./CollapseList";
+import { interfloorShortestPath, shortestPath } from "./getShortestPath";
+import { floors } from "./floors";
+import { mapConstructNameToPoint } from "./mapConstructNameToPoint";
+import { mapPointToConstructName } from "./mapPointToConstructName";
+import { liftPositions, liftPositionsReverseMap } from "./liftPositions";
 
 const MapViewPage = (onExit?: () => void) => {
   const element = h(
@@ -146,35 +151,109 @@ const ShortestPathPage = (onExit?: () => void) => {
           { style: "background:#F3F4F6" }
         );
         root.appendChild(element);
+
+        const getFloor = (x: string): number => {
+          if (/^Floor 1/.test(x)) return 0;
+          if (/^Floor 2/.test(x)) return 1;
+          if (/^Floor 3/.test(x)) return 2;
+          if (/^Floor 4/.test(x)) return 3;
+          if (/^Floor 5/.test(x)) return 4;
+          if (/^Floor 6/.test(x)) return 5;
+          if (/^Floor 7/.test(x)) return 6;
+          return 7; // not a real floor
+        };
+
+        const stripFloor = (x: string): string => x.replace(/^Floor \d: /, "");
+
+        let legs: { path: number[]; floor: number }[] = [];
+
+        if (getFloor(fromField) === getFloor(toField)) {
+          const floor = getFloor(fromField);
+          const point1 =
+            mapConstructNameToPoint[floor][stripFloor(fromField)] ||
+            liftPositions[stripFloor(fromField)];
+          const point2 =
+            mapConstructNameToPoint[floor][stripFloor(toField)] ||
+            liftPositions[stripFloor(toField)];
+          legs = [
+            { floor, path: shortestPath(floors[floor].graph, point1, point2) },
+          ];
+        } else {
+          const floor1 = getFloor(fromField);
+          const floor2 = getFloor(toField);
+          const point1 =
+            mapConstructNameToPoint[floor1][stripFloor(fromField)] ||
+            liftPositions[stripFloor(fromField)];
+          const point2 =
+            mapConstructNameToPoint[floor2][stripFloor(toField)] ||
+            liftPositions[stripFloor(toField)];
+          const computed = interfloorShortestPath(
+            floors[floor1].graph,
+            floors[floor2].graph,
+            point1,
+            point2
+          );
+          if (computed !== undefined) {
+            const [leg1, leg2] = computed;
+            legs = [
+              { path: leg1, floor: floor1 },
+              { path: leg2, floor: floor2 },
+            ];
+          }
+        }
+
         const mapView = MapView({
           type: "display path",
-          legs: [
-            { path: [35, 36, 37], floor: 3 },
-            { path: [20, 21, 22], floor: 5 },
-          ],
+          legs,
           changeLegHook: (changeLeg) => {
-            const list = CollapseList(["First leg", "Second leg"], (leg) => {
-              changeLeg(leg);
-            });
+            changeLeg(0);
+            const list = CollapseList(
+              legs.map(({ path, floor }) => {
+                if (path.length === 1) {
+                  return (
+                    "Floor " +
+                    (floor + 1) +
+                    ": " +
+                    (mapPointToConstructName[floor][path[0]] ||
+                      liftPositionsReverseMap[path[0]])
+                  );
+                }
+                return (
+                  "Floor " +
+                  (floor + 1) +
+                  ": " +
+                  (mapPointToConstructName[floor][path[0]] ||
+                    liftPositionsReverseMap[path[0]]) +
+                  " to " +
+                  (mapPointToConstructName[floor][path[path.length - 1]] ||
+                    liftPositionsReverseMap[path[path.length - 1]])
+                );
+              }),
+              (leg) => {
+                changeLeg(leg);
+              }
+            );
 
             element.appendChild(list.element);
-            element.appendChild(h("div.mb-3"))
+            element.appendChild(h("div.mb-3"));
           },
         });
-        element.appendChild(    h(
-          "div.bg-white.p-8.rounded-lg.shadow-md.w-full",
-          { style: "max-width:72rem" },
+        element.appendChild(
           h(
-            "button.bg-red-500.text-white.px-4.py-2.rounded.w-full.mb-3",
-            {
-              onclick: () => {
-                if (onExit !== undefined) onExit();
+            "div.bg-white.p-8.rounded-lg.shadow-md.w-full",
+            { style: "max-width:72rem" },
+            h(
+              "button.bg-red-500.text-white.px-4.py-2.rounded.w-full.mb-3",
+              {
+                onclick: () => {
+                  if (onExit !== undefined) onExit();
+                },
               },
-            },
-            "Exit"
-          ),
-         mapView.element
-        ));
+              "Exit"
+            ),
+            mapView.element
+          )
+        );
         return null;
       }
     }
