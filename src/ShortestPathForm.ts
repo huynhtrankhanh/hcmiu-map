@@ -88,15 +88,15 @@ export function ShortestPathForm(
       },
       h(
         "div.flex.flex-col",
-        h("label.font-roboto.mb-2.text-lg", { for: fromFieldId }, "From"),
+        h("label.mb-2.text-lg", { for: fromFieldId }, "From"),
         fromField.element,
         fromFieldError,
         h(
           "div.flex.items-center.justify-center.my-2",
           h("div.flex-grow.border-t.border-gray-300"),
-          h("span.px-3.font-roboto.text-sm", "or"),
+          h("span.px-3.text-sm", "or"),
           h(
-            "button.bg-blue-500.text-white.font-roboto.px-4.py-1.rounded",
+            "button.bg-blue-500.text-white.px-4.py-1.rounded",
             {
               type: "button",
               onclick: () => {
@@ -109,7 +109,7 @@ export function ShortestPathForm(
       ),
       h(
         "div.flex.flex-col",
-        h("label.font-roboto.mb-2.text-lg", { for: toFieldId }, "To"),
+        h("label.mb-2.text-lg", { for: toFieldId }, "To"),
         toField.element,
         toFieldError,
         h(
