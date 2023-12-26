@@ -7,6 +7,7 @@ import { floors } from "./floors";
 import { mapConstructNameToPoint } from "./mapConstructNameToPoint";
 import { mapPointToConstructName } from "./mapPointToConstructName";
 import { liftPositions, liftPositionsReverseMap } from "./liftPositions";
+import { TravelingSalesman } from "./TravelingSalesman";
 
 const MapViewPage = (onExit?: () => void) => {
   const element = h(
@@ -267,6 +268,16 @@ const ShortestPathPage = (onExit?: () => void) => {
   return { element: root };
 };
 
+const TravelingSalesmanPage = (onExit?: () => void) => {
+  const element =h(
+    "div.flex.flex-col.items-center.justify-center.h-screen",
+    { style: "background:#F3F4F6" },
+    h(
+      "div.bg-white.p-8.rounded-lg.shadow-md.w-full.max-w-md",TravelingSalesman().element
+    ))
+    return {element}
+}
+
 const LandingPage = (
   onClickViewMap?: () => void,
   onClickFindShortestPath?: () => void,
@@ -355,6 +366,7 @@ export const App = () => {
         return null;
       }
       case "traveling salesman": {
+        element.appendChild(TravelingSalesmanPage(exit).element)
         return null;
       }
     }
