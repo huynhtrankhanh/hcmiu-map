@@ -170,11 +170,13 @@ const ShortestPathPage = (onExit?: () => void) => {
         if (getFloor(fromField) === getFloor(toField)) {
           const floor = getFloor(fromField);
           const point1 =
-            mapConstructNameToPoint[floor][stripFloor(fromField)] ||
-            liftPositions[stripFloor(fromField)];
+            mapConstructNameToPoint[floor][stripFloor(fromField)] !== undefined
+              ? mapConstructNameToPoint[floor][stripFloor(fromField)]
+              : liftPositions[stripFloor(fromField)];
           const point2 =
-            mapConstructNameToPoint[floor][stripFloor(toField)] ||
-            liftPositions[stripFloor(toField)];
+            mapConstructNameToPoint[floor][stripFloor(toField)] !== undefined
+              ? mapConstructNameToPoint[floor][stripFloor(toField)]
+              : liftPositions[stripFloor(toField)];
           legs = [
             { floor, path: shortestPath(floors[floor].graph, point1, point2) },
           ];
@@ -182,11 +184,13 @@ const ShortestPathPage = (onExit?: () => void) => {
           const floor1 = getFloor(fromField);
           const floor2 = getFloor(toField);
           const point1 =
-            mapConstructNameToPoint[floor1][stripFloor(fromField)] ||
-            liftPositions[stripFloor(fromField)];
+            mapConstructNameToPoint[floor1][stripFloor(fromField)] !== undefined
+              ? mapConstructNameToPoint[floor1][stripFloor(fromField)]
+              : liftPositions[stripFloor(fromField)];
           const point2 =
-            mapConstructNameToPoint[floor2][stripFloor(toField)] ||
-            liftPositions[stripFloor(toField)];
+            mapConstructNameToPoint[floor2][stripFloor(toField)] !== undefined
+              ? mapConstructNameToPoint[floor2][stripFloor(toField)]
+              : liftPositions[stripFloor(toField)];
           const computed = interfloorShortestPath(
             floors[floor1].graph,
             floors[floor2].graph,
