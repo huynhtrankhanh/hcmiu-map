@@ -58,24 +58,40 @@ export const MapView = (
 
     config.changeLegHook((leg) => {
       currentFloor = legs[leg].floor;
-      renderCurrentFloor()
+      renderCurrentFloor();
 
       const path = legs[leg].path;
 
       if (path.length === 1) {
-        const label = labelAt(...points[path[0]], "X")
-        mapElement.appendChild(label)
-        setTimeout(() => label.scrollIntoView(), 0)
+        const label = labelAt(...points[path[0]], "X");
+        mapElement.appendChild(label);
+        // https://stackoverflow.com/a/52835382
+        setTimeout(
+          () =>
+            label.scrollIntoView({
+              behavior: "smooth",
+              block: "nearest",
+              inline: "start",
+            }),
+          0
+        );
       }
       let firstLine: HTMLDivElement | undefined;
       for (let i = 1; i < path.length; i++) {
-        const line = createLine(...points[path[i - 1]], ...points[path[i]])
-        if (!firstLine) firstLine = line
-        mapElement.appendChild(
-          line
-        );
+        const line = createLine(...points[path[i - 1]], ...points[path[i]]);
+        if (!firstLine) firstLine = line;
+        mapElement.appendChild(line);
       }
-      setTimeout(() => firstLine?.scrollIntoView(), 0)
+      // https://stackoverflow.com/a/52835382
+      setTimeout(
+        () =>
+          firstLine?.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest",
+            inline: "start",
+          }),
+        0
+      );
     });
   }
 
@@ -101,7 +117,8 @@ export const MapView = (
             currentFloor = Number((event.target as HTMLSelectElement).value);
             renderCurrentFloor();
           },
-          style: config?.type === "display path" ? "display:none" : "display:block",
+          style:
+            config?.type === "display path" ? "display:none" : "display:block",
         },
         h("option", { value: "0" }, "Floor 1"),
         h("option", { value: "1" }, "Floor 2"),
