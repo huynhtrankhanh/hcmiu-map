@@ -269,14 +269,25 @@ const ShortestPathPage = (onExit?: () => void) => {
 };
 
 const TravelingSalesmanPage = (onExit?: () => void) => {
-  const element =h(
+  const element = h(
     "div.flex.flex-col.items-center.justify-center.h-screen",
     { style: "background:#F3F4F6" },
     h(
-      "div.bg-white.p-8.rounded-lg.shadow-md.w-full.max-w-md",TravelingSalesman().element
-    ))
-    return {element}
-}
+      "div.bg-white.p-8.rounded-lg.shadow-md.w-full.max-w-md",
+      h(
+        "button.bg-red-500.text-white.px-4.py-2.rounded.w-full.mb-3",
+        {
+          onclick: () => {
+            if (onExit !== undefined) onExit();
+          },
+        },
+        "Exit"
+      ),
+      TravelingSalesman().element
+    )
+  );
+  return { element };
+};
 
 const LandingPage = (
   onClickViewMap?: () => void,
@@ -366,7 +377,7 @@ export const App = () => {
         return null;
       }
       case "traveling salesman": {
-        element.appendChild(TravelingSalesmanPage(exit).element)
+        element.appendChild(TravelingSalesmanPage(exit).element);
         return null;
       }
     }
