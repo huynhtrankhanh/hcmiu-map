@@ -72,6 +72,7 @@ export function SuggestBox(
     {
       type: "text",
       placeholder: "Search…",
+      autocomplete: "off",
       value: searchTerm,
       oninput: (event: Event) => {
         if (onChange) onChange((inputElement as HTMLInputElement).value);
