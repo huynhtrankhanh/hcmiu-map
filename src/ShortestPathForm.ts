@@ -1,20 +1,7 @@
 import h from "hyperscript";
 import { generateRandomString } from "./generateRandomString";
 import { SuggestBox } from "./SuggestBox";
-import { mapPointToConstructName } from "./mapPointToConstructName";
-import { liftPositionsReverseMap } from "./liftPositions";
-
-const emptyArray: string[] = [];
-
-const candidates = emptyArray.concat(
-  ...mapPointToConstructName.map((map, index) =>
-    Object.values({ ...map, ...liftPositionsReverseMap }).map(
-      (x) => "Floor " + (index + 1) + ": " + x
-    )
-  )
-);
-
-const candidateSet = new Set(candidates);
+import { candidates, candidateSet } from "./candidates";
 
 export function ShortestPathForm(
   defaultFrom: string = "",

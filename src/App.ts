@@ -11,7 +11,7 @@ import { TravelingSalesman } from "./TravelingSalesman";
 
 const MapViewPage = (onExit?: () => void) => {
   const element = h(
-    "div.flex.flex-col.items-center.justify-center.h-screen",
+    "div.flex.flex-col.items-center.justify-center.min-h-screen",
     { style: "background:#F3F4F6" },
     h(
       "div.bg-white.p-8.rounded-lg.shadow-md.w-full",
@@ -70,7 +70,7 @@ const ShortestPathPage = (onExit?: () => void) => {
           }
         );
         const element = h(
-          "div.flex.flex-col.items-center.justify-center.h-screen",
+          "div.flex.flex-col.items-center.justify-center.min-h-screen",
           { style: "background:#F3F4F6" },
           h(
             "div.bg-white.p-8.rounded-lg.shadow-md.w-full.max-w-md",
@@ -132,7 +132,7 @@ const ShortestPathPage = (onExit?: () => void) => {
           },
         });
         const element = h(
-          "div.flex.flex-col.items-center.justify-center.h-screen",
+          "div.flex.flex-col.items-center.justify-center.min-h-screen",
           { style: "background:#F3F4F6" },
           h(
             "div.bg-white.p-8.rounded-lg.shadow-md.w-full",
@@ -270,7 +270,7 @@ const ShortestPathPage = (onExit?: () => void) => {
 
 const TravelingSalesmanPage = (onExit?: () => void) => {
   const element = h(
-    "div.flex.flex-col.items-center.justify-center.h-screen",
+    "div.flex.flex-col.items-center.justify-center.min-h-screen",
     { style: "background:#F3F4F6" },
     h(
       "div.bg-white.p-8.rounded-lg.shadow-md.w-full.max-w-md",
@@ -295,7 +295,7 @@ const LandingPage = (
   onClickSolveTravelingSalesman?: () => void
 ) => {
   const element = h(
-    "div.flex.flex-col.items-center.justify-center.h-screen",
+    "div.flex.flex-col.items-center.justify-center.min-h-screen",
     { style: "background:#F3F4F6" },
     h(
       "div.bg-white.p-8.rounded-lg.shadow-md.w-full.max-w-md",
