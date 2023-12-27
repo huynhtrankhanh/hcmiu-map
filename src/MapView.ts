@@ -63,13 +63,19 @@ export const MapView = (
       const path = legs[leg].path;
 
       if (path.length === 1) {
-        mapElement.appendChild(labelAt(...points[path[0]], "X"))
+        const label = labelAt(...points[path[0]], "X")
+        mapElement.appendChild(label)
+        setTimeout(() => label.scrollIntoView(), 0)
       }
+      let firstLine: HTMLDivElement | undefined;
       for (let i = 1; i < path.length; i++) {
+        const line = createLine(...points[path[i - 1]], ...points[path[i]])
+        if (!firstLine) firstLine = line
         mapElement.appendChild(
-          createLine(...points[path[i - 1]], ...points[path[i]])
+          line
         );
       }
+      setTimeout(() => firstLine?.scrollIntoView(), 0)
     });
   }
 
