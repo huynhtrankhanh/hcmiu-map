@@ -10,13 +10,18 @@ export function TravelingSalesman(
   onChange?: (id: string, value: string) => void,
   onChooseOnMap?: (id: string) => void,
   onDelete?: (id: string) => void,
-  onAdd?: () => void,
+  onAdd?: (id: string) => void,
   onSubmit?: () => void
 ) {
   const compound = (id: string, defaultValue?: string) => {
-    const suggestBox = SuggestBox(candidates, id, (input) => {
-      onChange && onChange(id, input);
-    }, defaultValue);
+    const suggestBox = SuggestBox(
+      candidates,
+      id,
+      (input) => {
+        onChange && onChange(id, input);
+      },
+      defaultValue
+    );
     const compound = h(
       "div.flex.flex-col",
       suggestBox.element,
@@ -28,11 +33,13 @@ export function TravelingSalesman(
           {
             type: "button",
             onclick: () => {
-              suggestBox.cleanup()
-              compound.parentNode!.removeChild(compound)
-              const index = locations.findIndex(({ id: currentId }) => currentId === id)
-              locations.splice(index, 1)
-              compounds.splice(index, 1)
+              suggestBox.cleanup();
+              compound.parentNode!.removeChild(compound);
+              const index = locations.findIndex(
+                ({ id: currentId }) => currentId === id
+              );
+              locations.splice(index, 1);
+              compounds.splice(index, 1);
               onDelete && onDelete(id);
             },
           },
@@ -53,8 +60,8 @@ export function TravelingSalesman(
     return { element: compound, cleanup: suggestBox.cleanup };
   };
 
- const compounds = locations.map(({ id, value }) => compound(id, value))
- const compoundContainer = h("div", compounds)
+  const compounds = locations.map(({ id, value }) => compound(id, value));
+  const compoundContainer = h("div", compounds);
 
   const element = h(
     "div.flex.flex-col.items-center.justify-center",
@@ -75,11 +82,12 @@ export function TravelingSalesman(
           {
             type: "button",
             onclick: () => {
-              const location = { id: generateRandomString(), value: "" }
-              locations.push(location)
-              const element = compound(location.id, location.value)
-              compounds.push(element)
-              compoundContainer.appendChild(element.element)
+              const location = { id: generateRandomString(), value: "" };
+              locations.push(location);
+              const element = compound(location.id, location.value);
+              compounds.push(element);
+              compoundContainer.appendChild(element.element);
+              onAdd && onAdd(location.id);
             },
           },
           "Add Location"
@@ -96,7 +104,7 @@ export function TravelingSalesman(
   return {
     element,
     cleanup: () => {
-      compounds.forEach(x => x.cleanup())
+      compounds.forEach((x) => x.cleanup());
     },
   };
 }
