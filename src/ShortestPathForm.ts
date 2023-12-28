@@ -18,6 +18,8 @@ export function ShortestPathForm(
     candidates,
     fromFieldId,
     () => {
+      (fromFieldError as HTMLDivElement).style.display = "none";
+      (samePlacesError as HTMLDivElement).style.display = "none";
       onChange && onChange(fromField.getInput(), toField.getInput());
     },
     defaultFrom
@@ -26,6 +28,8 @@ export function ShortestPathForm(
     candidates,
     toFieldId,
     () => {
+      (toFieldError as HTMLDivElement).style.display = "none";
+      (samePlacesError as HTMLDivElement).style.display = "none";
       onChange && onChange(fromField.getInput(), toField.getInput());
     },
     defaultTo
@@ -58,6 +62,8 @@ export function ShortestPathForm(
           event.preventDefault();
           (fromFieldError as HTMLDivElement).style.display = "none";
           (toFieldError as HTMLDivElement).style.display = "none";
+          (samePlacesError as HTMLDivElement).style.display = "none";
+
           let bothValid = true;
           if (!candidateSet.has(fromField.getInput())) {
             bothValid = false;

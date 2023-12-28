@@ -18,13 +18,20 @@ export function TravelingSalesman(
       candidates,
       id,
       (input) => {
+        const index = locations.findIndex(
+          ({ id: currentId }) => id === currentId
+        )!;
+        locations[index].value = input;
+        hideError();
         onChange && onChange(id, input);
       },
       defaultValue
     );
+    const errorDiv = h("div.text-red-500.mt-2", { style: "display:none" });
     const compound = h(
       "div.flex.flex-col",
       suggestBox.element,
+      errorDiv,
       h(
         "div.flex.items-center.justify-center.my-2",
         h("div.flex-grow.border-t.border-gray-300"),
@@ -57,11 +64,27 @@ export function TravelingSalesman(
         )
       )
     );
-    return { element: compound, cleanup: suggestBox.cleanup };
+
+    const hideError = () => {
+      (errorDiv as HTMLDivElement).style.display = "none";
+    };
+
+    return {
+      element: compound,
+      cleanup: suggestBox.cleanup,
+      showError: (error: string) => {
+        (errorDiv as HTMLDivElement).style.display = "block";
+        errorDiv.textContent = error;
+      },
+      hideError,
+    };
   };
 
   const compounds = locations.map(({ id, value }) => compound(id, value));
-  const compoundContainer = h("div", compounds.map(({ element }) => element));
+  const compoundContainer = h(
+    "div",
+    compounds.map(({ element }) => element)
+  );
 
   const element = h(
     "div.flex.flex-col.items-center.justify-center",
@@ -71,6 +94,32 @@ export function TravelingSalesman(
       {
         onsubmit: (event: Event) => {
           event.preventDefault();
+          compounds.forEach((x) => x.hideError());
+          let hasError = false;
+          compounds.forEach((x, index) => {
+            if (!candidateSet.has(locations[index].value)) {
+              x.showError("Please choose a valid place");
+              hasError = true;
+            }
+          });
+          const mapInputToIndex = new Map<string, number[]>();
+          locations.forEach((x, index) => {
+            const list = mapInputToIndex.get(x.value) || [];
+            list.push(index);
+            mapInputToIndex.set(x.value, list);
+          });
+          for (const [key, value] of mapInputToIndex) {
+            if (!candidateSet.has(key)) continue;
+            if (value.length > 1)
+              value.forEach((x) =>
+                compounds[x].showError("Duplicate location")
+              ),
+                (hasError = true);
+          }
+          if (!hasError && onSubmit) {
+            compounds.forEach((x) => x.cleanup());
+            onSubmit();
+          }
         },
       },
       compoundContainer,
