@@ -70,7 +70,7 @@ export function ShortestPathForm(
           if (bothValid && fromField.getInput() === toField.getInput()) {
             (samePlacesError as HTMLDivElement).style.display = "block";
           }
-          if (onSubmit) onSubmit();
+          if (bothValid && onSubmit) onSubmit();
         },
       },
       h(
