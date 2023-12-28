@@ -69,6 +69,7 @@ export function ShortestPathForm(
           }
           if (bothValid && fromField.getInput() === toField.getInput()) {
             (samePlacesError as HTMLDivElement).style.display = "block";
+            bothValid = false;
           }
           if (bothValid && onSubmit) onSubmit();
         },
