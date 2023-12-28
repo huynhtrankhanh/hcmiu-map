@@ -9,6 +9,7 @@ import { mapPointToConstructName } from "./mapPointToConstructName";
 import { liftPositions, liftPositionsReverseMap } from "./liftPositions";
 import { TravelingSalesman } from "./TravelingSalesman";
 import { getFloor, stripFloor } from "./candidates";
+import { generateRandomString } from "./generateRandomString";
 
 const MapViewPage = (onExit?: () => void) => {
   const element = h(
@@ -257,24 +258,117 @@ const ShortestPathPage = (onExit?: () => void) => {
 };
 
 const TravelingSalesmanPage = (onExit?: () => void) => {
-  const element = h(
-    "div.flex.flex-col.items-center.justify-center.min-h-screen",
-    { style: "background:#F3F4F6" },
-    h(
-      "div.bg-white.p-8.rounded-lg.shadow-md.w-full.max-w-md",
-      h(
-        "button.bg-red-500.text-white.px-4.py-2.rounded.w-full.mb-3",
-        {
-          onclick: () => {
-            if (onExit !== undefined) onExit();
+  const locations = [{ id: generateRandomString(), value: "" }];
+  let currentStage:
+    | { type: "form" | "show result" }
+    | { type: "choose on map"; id: string } = { type: "form" };
+
+  const container = h("div");
+
+  const transition = (): null => {
+    container.innerHTML = "";
+    switch (currentStage.type) {
+      case "form": {
+        const travelingSalesman = TravelingSalesman(
+          locations,
+          undefined,
+          (id) => {
+            travelingSalesman.cleanup();
+            currentStage = { type: "choose on map", id };
+            transition();
           },
-        },
-        "Exit"
-      ),
-      TravelingSalesman().element
-    )
-  );
-  return { element };
+          undefined,
+          undefined,
+          () => {
+            // the component should have validated the locations
+            travelingSalesman.cleanup();
+            currentStage = { type: "show result" };
+            transition();
+          }
+        );
+
+        const element = h(
+          "div.flex.flex-col.items-center.justify-center.min-h-screen",
+          { style: "background:#F3F4F6" },
+          h(
+            "div.bg-white.p-8.rounded-lg.shadow-md.w-full.max-w-md",
+            h(
+              "button.bg-red-500.text-white.px-4.py-2.rounded.w-full.mb-3",
+              {
+                onclick: () => {
+                  travelingSalesman.cleanup();
+                  if (onExit !== undefined) onExit();
+                },
+              },
+              "Exit"
+            ),
+            travelingSalesman.element
+          )
+        );
+
+        container.appendChild(element);
+        return null;
+      }
+      case "choose on map": {
+        let currentlyChosen: string | undefined;
+
+        const cancelButton = h(
+          "button.bg-red-500.text-white.px-4.py-2.rounded.w-full.mt-3",
+          {
+            onclick: () => {
+              currentStage = { type: "form" };
+              transition();
+            },
+          },
+          "Cancel"
+        );
+
+        const { id } = currentStage
+        const index = locations.findIndex(({ id: currentId }) => currentId === id)!
+
+        const confirmButton = h(
+          "button.bg-blue-500.text-white.px-4.py-2.rounded.w-full",
+          { style: "display:none" },
+          {
+            onclick: () => {
+              locations[index].value = currentlyChosen!
+              console.log(locations)
+              currentStage = { type: "form" }
+              transition();
+            },
+          },
+          "Confirm"
+        );
+
+        const mapView = MapView({
+          type: "choose on map",
+          onChoose: (x) => {
+            currentlyChosen = x;
+            (confirmButton as HTMLButtonElement).style.display = "block";
+          },
+        });
+        const element = h(
+          "div.flex.flex-col.items-center.justify-center.min-h-screen",
+          { style: "background:#F3F4F6" },
+          h(
+            "div.bg-white.p-8.rounded-lg.shadow-md.w-full",
+            { style: "max-width:72rem" },
+            mapView.element,
+            h("div.mb-3"),
+            confirmButton,
+            cancelButton
+          )
+        );
+        container.appendChild(element);
+        return null;
+      }
+      case "show result": {
+        return null
+      }
+    }
+  };
+  transition()
+  return { element: container };
 };
 
 const LandingPage = (

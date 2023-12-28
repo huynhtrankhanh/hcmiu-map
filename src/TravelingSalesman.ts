@@ -6,7 +6,7 @@ import { candidates, candidateSet } from "./candidates";
 type Location = { id: string; value: string };
 
 export function TravelingSalesman(
-  locations: Location[] = [{ id: generateRandomString(), value: "" }],
+  locations: Location[],
   onChange?: (id: string, value: string) => void,
   onChooseOnMap?: (id: string) => void,
   onDelete?: (id: string) => void,
@@ -61,7 +61,7 @@ export function TravelingSalesman(
   };
 
   const compounds = locations.map(({ id, value }) => compound(id, value));
-  const compoundContainer = h("div", compounds);
+  const compoundContainer = h("div", compounds.map(({ element }) => element));
 
   const element = h(
     "div.flex.flex-col.items-center.justify-center",
