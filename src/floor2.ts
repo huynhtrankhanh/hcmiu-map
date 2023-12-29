@@ -124,4 +124,5 @@ export const graph: [number, number][] = [
   [51, 50],
   [54, 52],
   [35, 36],
+  [21, 23],
 ];
