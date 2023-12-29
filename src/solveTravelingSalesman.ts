@@ -30,7 +30,7 @@ export const solveTravelingSalesman = <T>(
         const previous = log2[leastSetBit];
         const distance =
           get(previous, mask & ~(1 << i)).distance +
-          weight(destinations[previous], destinations[current]);
+          weight(destinations[previous], destinations[i]);
         if (distance < saved.distance) {
           saved.distance = distance;
           saved.trace = [previous, mask & ~(1 << i)];
