@@ -10,6 +10,7 @@ import { liftPositions, liftPositionsReverseMap } from "./liftPositions";
 import { TravelingSalesman } from "./TravelingSalesman";
 import { getFloor, stripFloor } from "./candidates";
 import { generateRandomString } from "./generateRandomString";
+import { solveTravelingSalesman } from "./solveTravelingSalesman";
 
 const MapViewPage = (onExit?: () => void) => {
   const element = h(
@@ -246,8 +247,7 @@ const TravelingSalesmanPage = (onExit?: () => void) => {
           () => {
             // the component should have validated the locations
             travelingSalesman.cleanup();
-            if (locations.length > 20)
-              currentStage = { type: "hcmiu map pro" };
+            if (locations.length > 20) currentStage = { type: "hcmiu map pro" };
             else currentStage = { type: "show result" };
             transition();
           }
@@ -300,7 +300,6 @@ const TravelingSalesmanPage = (onExit?: () => void) => {
           {
             onclick: () => {
               locations[index].value = currentlyChosen!;
-              console.log(locations);
               currentStage = { type: "form" };
               transition();
             },
@@ -331,7 +330,95 @@ const TravelingSalesmanPage = (onExit?: () => void) => {
         return null;
       }
       case "show result": {
-        alert("您已选择：" + JSON.stringify(locations));
+        const weights: Record<string, Record<string, number>> = {};
+        for (const { value: a } of locations) {
+          weights[a] = {};
+          for (const { value: b } of locations) {
+            const legs = computeLegs(a, b);
+            weights[a][b] =
+              legs.reduce(
+                (accumulated, current) => accumulated + current.path.length,
+                0
+              ) - 1;
+          }
+        }
+        const result = solveTravelingSalesman(
+          locations.map(({ value }) => value),
+          (a, b) => weights[a][b]
+        );
+
+        const element = h(
+          "div.flex.flex-col.items-center.justify-center.min-h-screen",
+          { style: "background:#F3F4F6" }
+        );
+        container.appendChild(element);
+
+        let legs: { path: number[]; floor: number }[] = [];
+
+        if (result.length === 1) {
+          legs.push({
+            path: [mapConstructNameToPoint[getFloor(result[0])][stripFloor(result[0])]],
+            floor: getFloor(result[0]),
+          });
+        } else {
+          for (let i = 1; i < result.length; i++) {
+            for (const leg of computeLegs(result[i - 1], result[i])) {
+              legs.push(leg);
+            }
+          }
+        }
+        const mapView = MapView({
+          type: "display path",
+          legs,
+          changeLegHook: (changeLeg) => {
+            changeLeg(0);
+            const list = CollapseList(
+              legs.map(({ path, floor }) => {
+                if (path.length === 1) {
+                  return (
+                    "Floor " +
+                    (floor + 1) +
+                    ": " +
+                    (mapPointToConstructName[floor][path[0]] ||
+                      liftPositionsReverseMap[path[0]])
+                  );
+                }
+                return (
+                  "Floor " +
+                  (floor + 1) +
+                  ": " +
+                  (mapPointToConstructName[floor][path[0]] ||
+                    liftPositionsReverseMap[path[0]]) +
+                  " to " +
+                  (mapPointToConstructName[floor][path[path.length - 1]] ||
+                    liftPositionsReverseMap[path[path.length - 1]])
+                );
+              }),
+              (leg) => {
+                changeLeg(leg);
+              }
+            );
+
+            element.appendChild(list.element);
+            element.appendChild(h("div.mb-3"));
+          },
+        });
+        element.appendChild(
+          h(
+            "div.bg-white.p-8.rounded-lg.shadow-md.w-full",
+            { style: "max-width:72rem" },
+            h(
+              "button.bg-red-500.text-white.px-4.py-2.rounded.w-full.mb-3",
+              {
+                onclick: () => {
+                  if (onExit !== undefined) onExit();
+                },
+              },
+              "Exit"
+            ),
+            mapView.element
+          )
+        );
         return null;
       }
       case "hcmiu map pro": {

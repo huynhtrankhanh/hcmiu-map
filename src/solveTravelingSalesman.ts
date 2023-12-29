@@ -23,6 +23,10 @@ export const solveTravelingSalesman = <T>(
 
   for (let mask = 0; mask < 1 << n; mask++) {
     for (let i = 0; i < n; i++) {
+      if (mask === (1 << i)) {
+        get(i, mask).distance = 0;
+      }
+
       let current = mask;
       const saved = get(i, mask);
       while (current) {
@@ -56,7 +60,7 @@ export const solveTravelingSalesman = <T>(
 
   const path: T[] = [];
 
-  if (currentVertex !== -1) {
+  while (currentVertex !== -1) {
     path.push(destinations[currentVertex]);
     [currentVertex, currentMask] = get(currentVertex, currentMask).trace;
   }
