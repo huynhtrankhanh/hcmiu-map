@@ -155,46 +155,10 @@ const ShortestPathPage = (onExit?: () => void) => {
         );
         root.appendChild(element);
 
-        let legs: { path: number[]; floor: number }[] = [];
-
-        if (getFloor(fromField) === getFloor(toField)) {
-          const floor = getFloor(fromField);
-          const point1 =
-            mapConstructNameToPoint[floor][stripFloor(fromField)] !== undefined
-              ? mapConstructNameToPoint[floor][stripFloor(fromField)]
-              : liftPositions[stripFloor(fromField)];
-          const point2 =
-            mapConstructNameToPoint[floor][stripFloor(toField)] !== undefined
-              ? mapConstructNameToPoint[floor][stripFloor(toField)]
-              : liftPositions[stripFloor(toField)];
-          legs = [
-            { floor, path: shortestPath(floors[floor].graph, point1, point2) },
-          ];
-        } else {
-          const floor1 = getFloor(fromField);
-          const floor2 = getFloor(toField);
-          const point1 =
-            mapConstructNameToPoint[floor1][stripFloor(fromField)] !== undefined
-              ? mapConstructNameToPoint[floor1][stripFloor(fromField)]
-              : liftPositions[stripFloor(fromField)];
-          const point2 =
-            mapConstructNameToPoint[floor2][stripFloor(toField)] !== undefined
-              ? mapConstructNameToPoint[floor2][stripFloor(toField)]
-              : liftPositions[stripFloor(toField)];
-          const computed = interfloorShortestPath(
-            floors[floor1].graph,
-            floors[floor2].graph,
-            point1,
-            point2
-          );
-          if (computed !== undefined) {
-            const [leg1, leg2] = computed;
-            legs = [
-              { path: leg1, floor: floor1 },
-              { path: leg2, floor: floor2 },
-            ];
-          }
-        }
+        let legs: { path: number[]; floor: number }[] = computeLegs(
+          fromField,
+          toField
+        );
 
         const mapView = MapView({
           type: "display path",
@@ -260,7 +224,7 @@ const ShortestPathPage = (onExit?: () => void) => {
 const TravelingSalesmanPage = (onExit?: () => void) => {
   const locations = [{ id: generateRandomString(), value: "" }];
   let currentStage:
-    | { type: "form" | "show result" }
+    | { type: "form" | "show result" | "hcmiu map pro" }
     | { type: "choose on map"; id: string } = { type: "form" };
 
   const container = h("div");
@@ -282,7 +246,9 @@ const TravelingSalesmanPage = (onExit?: () => void) => {
           () => {
             // the component should have validated the locations
             travelingSalesman.cleanup();
-            currentStage = { type: "show result" };
+            if (locations.length > 20)
+              currentStage = { type: "hcmiu map pro" };
+            else currentStage = { type: "show result" };
             transition();
           }
         );
@@ -323,17 +289,19 @@ const TravelingSalesmanPage = (onExit?: () => void) => {
           "Cancel"
         );
 
-        const { id } = currentStage
-        const index = locations.findIndex(({ id: currentId }) => currentId === id)!
+        const { id } = currentStage;
+        const index = locations.findIndex(
+          ({ id: currentId }) => currentId === id
+        )!;
 
         const confirmButton = h(
           "button.bg-blue-500.text-white.px-4.py-2.rounded.w-full",
           { style: "display:none" },
           {
             onclick: () => {
-              locations[index].value = currentlyChosen!
-              console.log(locations)
-              currentStage = { type: "form" }
+              locations[index].value = currentlyChosen!;
+              console.log(locations);
+              currentStage = { type: "form" };
               transition();
             },
           },
@@ -363,11 +331,60 @@ const TravelingSalesmanPage = (onExit?: () => void) => {
         return null;
       }
       case "show result": {
-        return null
+        alert("您已选择：" + JSON.stringify(locations));
+        return null;
+      }
+      case "hcmiu map pro": {
+        const element = h(
+          "div.flex.flex-col.items-center.justify-center.min-h-screen",
+          { style: "background:#F3F4F6" },
+          h(
+            "div.flex.flex-col.items-center.justify-center",
+            h(
+              "div.bg-white.p-8.rounded-lg.shadow-md.w-full.max-w-md",
+              h("h1.text-xl.mb-4", "HCMIU Map Pro Required"),
+              h(
+                "p",
+                "You chose " +
+                  locations.length +
+                  " locations, which exceeds the maximum limit of 20 in HCMIU Map Free."
+              ),
+              h(
+                "p.mb-2",
+                "The traveling salesman problem is an NP-hard problem. Solving this problem for more than 20 locations requires lots of computing resources and engineering expertise."
+              ),
+              h(
+                "p.mb-2",
+                "With HCMIU Map Pro, you gain access to a dedicated engineering team with proven expertise in the traveling salesman problem, as well as powerful servers to solve the problem for your chosen locations."
+              ),
+              h(
+                "p.mb-2",
+                "In order to buy HCMIU Map Pro, you must be a 5 Good Student and your GPA must be above 99. HCMIU Map Pro is sold at the price of 1000 VND as long as the previously mentioned conditions are met."
+              ),
+              h(
+                "p",
+                "Contact the Cartographers team of the Data Structures and Algorithms course to buy HCMIU Map Pro."
+              ),
+              h(
+                "button.bg-blue-500.text-white.px-4.py-2.rounded.w-full.mt-3",
+                {
+                  onclick: () => {
+                    currentStage = { type: "form" };
+                    transition();
+                  },
+                },
+                "Go Back"
+              )
+            )
+          )
+        );
+
+        container.appendChild(element);
+        return null;
       }
     }
   };
-  transition()
+  transition();
   return { element: container };
 };
 
@@ -467,3 +484,44 @@ export const App = () => {
   transition();
   return { element };
 };
+function computeLegs(fromField: string, toField: string) {
+  let legs: { path: number[]; floor: number }[] = [];
+
+  if (getFloor(fromField) === getFloor(toField)) {
+    const floor = getFloor(fromField);
+    const point1 =
+      mapConstructNameToPoint[floor][stripFloor(fromField)] !== undefined
+        ? mapConstructNameToPoint[floor][stripFloor(fromField)]
+        : liftPositions[stripFloor(fromField)];
+    const point2 =
+      mapConstructNameToPoint[floor][stripFloor(toField)] !== undefined
+        ? mapConstructNameToPoint[floor][stripFloor(toField)]
+        : liftPositions[stripFloor(toField)];
+    legs = [{ floor, path: shortestPath(floors[floor].graph, point1, point2) }];
+  } else {
+    const floor1 = getFloor(fromField);
+    const floor2 = getFloor(toField);
+    const point1 =
+      mapConstructNameToPoint[floor1][stripFloor(fromField)] !== undefined
+        ? mapConstructNameToPoint[floor1][stripFloor(fromField)]
+        : liftPositions[stripFloor(fromField)];
+    const point2 =
+      mapConstructNameToPoint[floor2][stripFloor(toField)] !== undefined
+        ? mapConstructNameToPoint[floor2][stripFloor(toField)]
+        : liftPositions[stripFloor(toField)];
+    const computed = interfloorShortestPath(
+      floors[floor1].graph,
+      floors[floor2].graph,
+      point1,
+      point2
+    );
+    if (computed !== undefined) {
+      const [leg1, leg2] = computed;
+      legs = [
+        { path: leg1, floor: floor1 },
+        { path: leg2, floor: floor2 },
+      ];
+    }
+  }
+  return legs;
+}

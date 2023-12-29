@@ -47,6 +47,8 @@ export function TravelingSalesman(
               );
               locations.splice(index, 1);
               compounds.splice(index, 1);
+              if (locations.length === 0)
+                (findPathButton as HTMLButtonElement).style.display = "none";
               onDelete && onDelete(id);
             },
           },
@@ -84,6 +86,12 @@ export function TravelingSalesman(
   const compoundContainer = h(
     "div",
     compounds.map(({ element }) => element)
+  );
+
+  const findPathButton = h(
+    "button.bg-green-500.text-white.px-4.py-2.rounded.w-full",
+    { type: "submit" },
+    "Find Path"
   );
 
   const element = h(
@@ -136,6 +144,7 @@ export function TravelingSalesman(
               const element = compound(location.id, location.value);
               compounds.push(element);
               compoundContainer.appendChild(element.element);
+              (findPathButton as HTMLButtonElement).style.display = "block";
               onAdd && onAdd(location.id);
             },
           },
@@ -143,11 +152,7 @@ export function TravelingSalesman(
         ),
         h("div.flex-grow.border-t.border-gray-300")
       ),
-      h(
-        "button.bg-green-500.text-white.px-4.py-2.rounded.w-full",
-        { type: "submit" },
-        "Find Path"
-      )
+      findPathButton
     )
   );
   return {
