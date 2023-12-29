@@ -16,9 +16,11 @@ function shortestPath(
     adjacencyList.get(v)!.push(u);
   }
 
+  const n = graph.map(([a, b]) => Math.max(a, b)).reduce((accumulated, current) => Math.max(accumulated, current));
+
   const queue: number[] = [start];
   const visited: Set<number> = new Set([start]);
-  const trace: number[] = Array.from({ length: adjacencyList.size }, () => -1);
+  const trace: number[] = Array.from({ length: n }, () => -1);
 
   while (queue.length > 0) {
     const current = queue.shift()!;
