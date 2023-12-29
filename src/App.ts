@@ -367,6 +367,17 @@ const TravelingSalesmanPage = (onExit?: () => void) => {
             }
           }
         }
+
+        {
+          const seen = new Set<string>()
+          const newLegs = []
+          for (const leg of legs) {
+            if (!seen.has(JSON.stringify(leg))) newLegs.push(leg)
+            seen.add(JSON.stringify(leg))
+          }
+          legs = newLegs;
+        }
+
         const mapView = MapView({
           type: "display path",
           legs,
