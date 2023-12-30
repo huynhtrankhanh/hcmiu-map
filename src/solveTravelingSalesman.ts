@@ -1,69 +1,63 @@
+// main.ts
+
+import { solveTSPDP } from './as/assembly/solveTSP.as';
+
 export const solveTravelingSalesman = <T>(
   destinations: T[],
   weight: (a: T, b: T) => number
-) => {
-  const mapDestinationToIndex = new Map<T, number>();
-  for (const [index, x] of destinations.entries()) {
-    mapDestinationToIndex.set(x, index);
-  }
-
+): T[] => {
   const n = destinations.length;
-  const dp = Array.from(
-    { length: (1 << n) * n },
-    (): { distance: number; trace: [number, number] } => ({
-      distance: Infinity,
-      trace: [-1, -1],
-    })
-  );
+  const dp = new Uint32Array((1 << n) * n).fill(0x3f3f3f3f);
 
-  const log2 = Array.from({ length: 1 << n }, () => 0);
-  for (let i = 0; i < n; i++) log2[1 << i] = i;
-
-  const get = (vertex: number, visited: number) => dp[visited * n + vertex];
-
-  for (let mask = 0; mask < 1 << n; mask++) {
-    for (let i = 0; i < n; i++) {
-      if (mask === (1 << i)) {
-        get(i, mask).distance = 0;
-      }
-
-      let current = mask;
-      const saved = get(i, mask);
-      while (current) {
-        const leastSetBit = current & -current;
-        const previous = log2[leastSetBit];
-        if (previous !== i) {
-          const distance =
-            get(previous, mask & ~(1 << i)).distance +
-            weight(destinations[previous], destinations[i]);
-          if (distance < saved.distance) {
-            saved.distance = distance;
-            saved.trace = [previous, mask & ~(1 << i)];
-          }
-        }
-        current -= leastSetBit;
-      }
+  const weights = new Uint32Array(n * n);
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < n; j++) {
+      weights[i * n + j] = weight(destinations[i], destinations[j]);
     }
   }
+
+  const log2 = new Uint32Array(1 << n).fill(0);
+  for (let i = 0; i < n; i++) log2[1 << i] = i;
+
+  solveTSPDP(weights, n, dp, log2);
+
+  // Rest of the TypeScript code for reconstructing path
+  const path = [];
 
   let currentVertex = -1;
   let currentMask = (1 << n) - 1;
   for (let i = 0; i < n; i++) {
-    const total = get(i, (1 << n) - 1).distance;
-    if (
-      currentVertex === -1 ||
-      total < get(currentVertex, currentMask).distance
-    ) {
+    const total = dp[i * n + (1 << n) - 1];
+    if (currentVertex === -1 || total < dp[currentVertex * n + currentMask]) {
       currentVertex = i;
     }
   }
 
-  const path: T[] = [];
-
-  while (currentVertex !== -1) {
+  while (currentMask !== (1 << currentVertex)) {
     path.push(destinations[currentVertex]);
-    [currentVertex, currentMask] = get(currentVertex, currentMask).trace;
+    let current = currentMask;
+
+    let vertexPrevious = -1;
+    let maskPrevious = -1;
+    while (current) {
+      const leastSetBit = current & -current;
+      const previous = log2[leastSetBit];
+      if (previous !== currentVertex) {
+        const distance =
+          dp[(currentMask & ~(1 << currentVertex)) * n + previous] +
+          weights[previous * n + currentVertex];
+        if (vertexPrevious === -1 || distance < dp[maskPrevious * n + vertexPrevious]) {
+          vertexPrevious = previous;
+          maskPrevious = currentMask & ~(1 << currentVertex);
+        }
+      }
+      current -= leastSetBit;
+    }
+
+    currentVertex = vertexPrevious;
+    currentMask = maskPrevious;
   }
+  path.push(destinations[currentVertex]);
   path.reverse();
 
   return path;

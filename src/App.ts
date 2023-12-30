@@ -330,21 +330,15 @@ const TravelingSalesmanPage = (onExit?: () => void) => {
         return null;
       }
       case "show result": {
-        const weights: Record<string, Record<string, number>> = {};
-        for (const { value: a } of locations) {
-          weights[a] = {};
-          for (const { value: b } of locations) {
-            const legs = computeLegs(a, b);
-            weights[a][b] =
-              legs.reduce(
-                (accumulated, current) => accumulated + current.path.length,
-                0
-              ) - 1;
-          }
-        }
         const result = solveTravelingSalesman(
           locations.map(({ value }) => value),
-          (a, b) => weights[a][b]
+          (a, b) => {
+            const legs = computeLegs(a, b);
+            return legs.reduce(
+              (accumulated, current) => accumulated + current.path.length,
+              0
+            ) - 1;
+          }
         );
 
         const element = h(
