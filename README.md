@@ -1,7 +1,7 @@
 # hcmiu-map
 project for data structures and algorithms course. interactive map of HCMIU, pathfinding, time estimation
 
-demo: **https://lively-kataifi-cf3f63.netlify.app/**
+demo: **https://hcmiumap.huynhtrankhanh.com**
 
 - **map:** view what HCMIU has to offer. labs, cafeterias, classrooms, gates, parking lots
 - **path finding:** find shortest path from one point to another
